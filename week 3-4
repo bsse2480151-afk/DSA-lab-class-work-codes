@@ -1,0 +1,239 @@
+//week-3
+
+//linked list
+class LL {
+
+    Node head;
+    private int size;
+
+    LL() { size = 0; }
+
+    public class Node {
+        int data;
+        Node next;
+        Node(int data) {
+            this.data = data;
+            this.next = null;
+            size++;
+        }
+    }
+
+    // Add at end
+    public void addLast(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            return;
+        }
+        Node curr = head;
+        while (curr.next != null) {
+            curr = curr.next;
+        }
+        curr.next = newNode;
+    }
+
+    // Print the list
+    public void printList() {
+        Node curr = head;
+        while (curr != null) {
+            System.out.print(curr.data + " -> ");
+            curr = curr.next;
+        }
+        System.out.println("null");
+    }
+
+    public void deleteGreaterThan(int limit) {
+        while (head != null && head.data > limit) {
+            head = head.next;
+            size--;
+        }
+
+        Node curr = head;
+        while (curr != null && curr.next != null) {
+            if (curr.next.data > limit) {
+                curr.next = curr.next.next;
+                size--;
+            } else {
+                curr = curr.next;
+            }
+        }
+    }
+    // 🔍 Custom Search Function
+    public int searchElement(int value) {
+        Node curr = head;
+        int index = 0;
+        while (curr != null) {
+            if (curr.data == value)
+                return index;
+            curr = curr.next;
+            index++;
+        }
+        return -1; // not found
+    }
+
+    public static void main(String[] args) {
+        LL list = new LL();
+        int[] arr = {1, 55, 77, 3, 8, 2, 3};
+
+        for (int n : arr)
+            list.addLast(n);
+
+        System.out.print("Linked List: ");
+        list.printList();
+
+        int value = 7;
+        int index = list.searchElement(value);
+
+        list.deleteGreaterThan(50);
+        list.printList();
+
+        if (index != -1)
+            System.out.println("Element " + value + " found at index: " + index);
+        else
+            System.out.println("Element not found in list.");
+    }
+
+}
+
+///week-4///
+
+
+// selection sort
+import java.util.Arrays;
+
+public class SelectionSort {
+    static void selectionSort(int[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            int min = i;
+            for (int j = i + 1; j < arr.length; j++)
+                if (arr[j] < arr[min])
+                    min = j;
+
+            int temp = arr[i];
+            arr[i] = arr[min];
+            arr[min] = temp;
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {35, 34, 54, 21};
+        selectionSort(arr);
+        System.out.println("Sorted Array: " + Arrays.toString(arr));
+    }
+}
+
+//bubblesort
+import java.util.Arrays;
+
+public class BubbleSort {
+    static void bubbleSort(int[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = 0; j < arr.length - i - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {25, 33, 45, 55};
+        bubbleSort(arr);
+        System.out.println("Sorted Array: " + Arrays.toString(arr));
+    }
+}
+
+//insetionsort
+import java.util.Arrays;
+
+public class InsertionSort {
+    static void insertionSort(int[] arr) {
+        //insertion sort
+        for(int i=1; i<arr.length; i++) {
+            int current = arr[i];
+            int j = i - 1;
+            while(j >= 0 && arr[j] > current) {
+                //Keep swapping
+                arr[j+1] = arr[j];
+                j--;
+            }
+            arr[j+1] = current;
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {54, 35, 41, 11};
+        insertionSort(arr);
+        System.out.println("Sorted Array: " + Arrays.toString(arr));
+    }
+}
+//mergesort
+import java.util.Arrays;
+
+public class MergeSort {
+    static void mergeSort(int[] arr, int l, int r) {
+        if (l < r) {
+            int mid = (l + r) / 2;
+            mergeSort(arr, l, mid);
+            mergeSort(arr, mid + 1, r);
+            merge(arr, l, mid, r);
+        }
+    }
+
+    static void merge(int[] arr, int l, int m, int r) {
+        int n1 = m - l + 1, n2 = r - m;
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+        for (int i = 0; i < n1; i++) L[i] = arr[l + i];
+        for (int j = 0; j < n2; j++) R[j] = arr[m + 1 + j];
+        int i = 0, j = 0, k = l;
+        while (i < n1 && j < n2)
+            arr[k++] = (L[i] <= R[j]) ? L[i++] : R[j++];
+        while (i < n1) arr[k++] = L[i++];
+        while (j < n2) arr[k++] = R[j++];
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {51, 31, 41, 11};
+        mergeSort(arr, 0, arr.length - 1);
+        System.out.println("Sorted Array: " + Arrays.toString(arr));
+    }
+}
+
+//QUick sort
+import java.util.Arrays;
+
+public class QuickSort {
+    static void quickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pi = partition(arr, low, high);
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+
+    static int partition(int[] arr, int low, int high) {
+        int pivot = arr[high];
+        int i = (low - 1);
+        for (int j = low; j < high; j++) {
+            if (arr[j] < pivot) {
+                i++;
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+        int temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+        return i + 1;
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {5, 3, 4, 1};
+        quickSort(arr, 0, arr.length - 1);
+        System.out.println("Sorted Array: " + Arrays.toString(arr));
+    }
+}
