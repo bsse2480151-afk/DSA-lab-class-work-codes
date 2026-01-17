@@ -1,0 +1,286 @@
+//week 11
+//binary search
+class BinarySearchIterative {
+
+    public static int binarySearch(int[] arr, int target) {
+        int low = 0;
+        int high = arr.length - 1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            if (arr[mid] == target) {
+                return mid;
+            } else if (arr[mid] < target) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {2, 5, 7, 10, 15, 20};
+        int target = 10;
+
+        int result = binarySearch(arr, target);
+
+        if (result == -1)
+            System.out.println("Element not found");
+        else
+            System.out.println("Found at index: " + result);
+    }
+}
+//recursive binary
+public class BinarySearchRecursive {
+
+    public static int binarySearchRec(int[] arr, int target, int low, int high) {
+        if (low > high) {
+            return -1;
+        }
+
+        int mid = low + (high - low) / 2;
+
+        if (arr[mid] == target) {
+            return mid;
+        } else if (arr[mid] < target) {
+            return binarySearchRec(arr, target, mid + 1, high);
+        } else {
+            return binarySearchRec(arr, target, low, mid - 1);
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {2, 5, 7, 10, 15, 20};
+        int target = 15;
+
+        int result = binarySearchRec(arr, target, 0, arr.length - 1);
+
+        if (result == -1)
+            System.out.println("Element not found");
+        else
+            System.out.println("Found at index: " + result);
+    }
+}
+
+//week 12
+// merge sort
+import java.util.Arrays;
+
+ class MergeSort {
+
+    public static void divide(int arr[], int si, int ei) {
+        if (si >= ei) {
+            return;
+        }
+        int mid = si + (ei - si) / 2;
+        divide(arr, si, mid);
+        divide(arr, mid + 1, ei);
+        conquer(arr, si, mid, ei);
+    }
+
+    public static void conquer(int arr[], int si, int mid, int ei) {
+        int merged[] = new int[ei - si + 1];
+        int idx1 = si;
+        int idx2 = mid + 1;
+        int x = 0;
+
+        while (idx1 <= mid && idx2 <= ei) {
+            if (arr[idx1] <= arr[idx2]) {
+                merged[x++] = arr[idx1++];
+            } else {
+                merged[x++] = arr[idx2++];
+            }
+        }
+
+        while (idx1 <= mid) {
+            merged[x++] = arr[idx1++];
+        }
+
+        while (idx2 <= ei) {
+            merged[x++] = arr[idx2++];
+        }
+
+        for (int i = 0, j = si; i < merged.length; i++, j++) {
+            arr[j] = merged[i];
+        }
+    }
+
+    public static void mergeSort(int[] arr, int si, int ei) {
+        divide(arr, si, ei);
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {12, 7, 9, 20, 5, 15};
+        mergeSort(arr, 0, arr.length - 1);
+        System.out.println("Sorted Array: " + Arrays.toString(arr));
+    }
+}
+
+// quick sort
+import java.util.Arrays;
+
+class QuickSort {
+
+    static void quickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pi = partition(arr, low, high);
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+
+    static int partition(int[] arr, int low, int high) {
+        int pivot = arr[high];
+        int idx = low - 1;
+
+        for (int j = low; j < high; j++) {
+            if (arr[j] < pivot) {
+                idx++;
+                swap(arr, j, idx);
+            }
+        }
+
+        idx++;
+        swap(arr, idx, high);
+        return idx;
+    }
+
+    public static void swap(int arr[], int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {20, 5, 12, 7, 15};
+        quickSort(arr, 0, arr.length - 1);
+        System.out.println("Sorted Array: " + Arrays.toString(arr));
+    }
+}
+
+
+//week 13
+//tree
+import java.util.*;
+
+class Node {
+    int data;
+    Node left, right;
+
+    Node(int data) {
+        this.data = data;
+        left = right = null;
+    }
+}
+
+public class Main {
+
+    static Node insert(Node root, int val) {
+        if (root == null) {
+            return new Node(val);
+        }
+
+        if (val < root.data)
+            root.left = insert(root.left, val);
+        else
+            root.right = insert(root.right, val);
+
+        return root;
+    }
+
+    static void inorder(Node root) {
+        if (root == null) return;
+        inorder(root.left);
+        System.out.print(root.data + " ");
+        inorder(root.right);
+    }
+
+    static void preorder(Node root) {
+        if (root == null) return;
+        System.out.print(root.data + " ");
+        preorder(root.left);
+        preorder(root.right);
+    }
+
+    static void postorder(Node root) {
+        if (root == null) return;
+        postorder(root.left);
+        postorder(root.right);
+        System.out.print(root.data + " ");
+    }
+
+    static boolean search(Node root, int key) {
+        if (root == null) return false;
+        if (root.data == key) return true;
+
+        if (key < root.data)
+            return search(root.left, key);
+        else
+            return search(root.right, key);
+    }
+
+    static int findMin(Node root) {
+        while (root.left != null)
+            root = root.left;
+        return root.data;
+    }
+
+    static int height(Node root) {
+        if (root == null) return 0;
+        return 1 + Math.max(height(root.left), height(root.right));
+    }
+
+    static Node delete(Node root, int key) {
+        if (root == null) return null;
+
+        if (key < root.data)
+            root.left = delete(root.left, key);
+        else if (key > root.data)
+            root.right = delete(root.right, key);
+        else {
+            if (root.left == null) return root.right;
+            else if (root.right == null) return root.left;
+
+            root.data = findMin(root.right);
+            root.right = delete(root.right, root.data);
+        }
+        return root;
+    }
+
+    public static void main(String[] args) {
+
+        Node root = null;
+        int[] values = {50, 30, 70, 20, 40, 60, 80};
+
+        for (int val : values) {
+            root = insert(root, val);
+        }
+
+        System.out.print("Inorder Traversal: ");
+        inorder(root);
+        System.out.println();
+
+        System.out.print("Preorder Traversal: ");
+        preorder(root);
+        System.out.println();
+
+        System.out.print("Postorder Traversal: ");
+        postorder(root);
+        System.out.println();
+
+        int key = 60;
+        System.out.println("Search " + key + ": " + search(root, key));
+
+        System.out.println("Deleting 30");
+        root = delete(root, 30);
+
+        System.out.print("Inorder After Deletion: ");
+        inorder(root);
+        System.out.println();
+
+        System.out.println("Height of Tree: " + height(root));
+    }
+}
